@@ -1,155 +1,167 @@
 # Product Backlog — Gestion Scolaire QR Code
 
-**Priorités** : 🔴 Must | 🟡 Should | 🟢 Could
+**Priorités** : 🔴 J1 | 🟡 J2 | 🟢 J3 | 🔵 J4 | ⚪ J5 | 🟣 J6 | 🟤 J7 | ⚫ J8
 
 ---
 
-## Epic Authentification & Rôles
-
-| ID | Libellé | Priorité | Estimation | Dépendances |
-|----|---------|----------|------------|-------------|
-| US-001 | Création du compte administrateur principal (seed) | 🔴 Must | 1j | — |
-| US-002 | Connexion | 🔴 Must | 3j | US-001 |
-| US-003 | Déconnexion | 🔴 Must | 1j | US-002 |
-| US-004 | Interface adaptée au rôle (dashboard différent par profil) | 🔴 Must | 3j | US-002 |
-| US-005 | Réinitialisation mot de passe | 🟡 Should | 2j | US-002 |
+> **Règle transverse** : chaque action (sauvegarde, chargement, génération, impression) doit afficher un loading state — spinner sur bouton, skeleton rows pour les listes, barre de progression pour les uploads/impressions groupées.
 
 ---
 
-## Epic Élèves
+## J1 — Setup & Authentification (multi-école)
 
-| ID | Libellé | Priorité | Estimation | Dépendances |
-|----|---------|----------|------------|-------------|
-| US-006 | Ajouter un élève (inscription) | 🔴 Must | 3j | US-011 |
-| US-007 | Modifier un élève | 🔴 Must | 1j | US-006 |
-| US-008 | Supprimer un élève | 🔴 Must | 1j | US-006 |
-| US-009 | Rechercher un élève | 🔴 Must | 2j | US-006 |
-| US-010 | Importer liste d'élèves (CSV) | 🟢 Could | 2j | US-006 |
-| US-011 | Fiche détail élève (avec photo, QR code) | 🔴 Must | 2j | US-006 |
-
----
-
-## Epic Classes & Cours
-
-| ID | Libellé | Priorité | Estimation | Dépendances |
-|----|---------|----------|------------|-------------|
-| US-012 | Créer une classe | 🔴 Must | 2j | — |
-| US-013 | Modifier une classe | 🔴 Must | 1j | US-012 |
-| US-014 | Supprimer une classe | 🔴 Must | 1j | US-012 |
-| US-015 | Créer un cours | 🔴 Must | 2j | US-012 |
-| US-016 | Modifier un cours | 🔴 Must | 1j | US-015 |
-| US-017 | Supprimer un cours | 🔴 Must | 1j | US-015 |
-| US-018 | Affecter un enseignant à un cours | 🔴 Must | 2j | US-015, US-021 |
-| US-019 | Affecter un élève à une classe | 🔴 Must | 2j | US-006, US-012 |
+| ID | Libellé | Jour | Estimation |
+|----|---------|------|------------|
+| S-001 | Initialiser backend (Bun + Elysia + Prisma + PostgreSQL) | 🔴 J1 | 2h |
+| S-002 | Initialiser frontend (React + TypeScript + Tailwind + React Query) | 🔴 J1 | 2h |
+| S-003 | Schéma Prisma avec entité ECOLE + ecole_id sur toutes les tables | 🔴 J1 | 3h |
+| US-001 | Seed de l'école + administrateur principal (création école + admin) | 🔴 J1 | 1h |
+| US-002 | Connexion multi-école (par sous-domaine — email + mot de passe uniquement) | 🔴 J1 | 3h |
+| US-003 | Déconnexion | 🔴 J1 | 1h |
+| US-004 | Interface adaptée au rôle (layout sidebar, routing, school context) | 🔴 J1 | 3h |
+| S-004 | Middleware auth JWT + filtre ecole_id sur chaque requête | 🔴 J1 | 2h |
 
 ---
 
-## Epic Enseignants
+> **Loading states J2** : skeleton rows sur les listes, spinner sur boutons de sauvegarde, barre de progression upload photo.
 
-| ID | Libellé | Priorité | Estimation | Dépendances |
-|----|---------|----------|------------|-------------|
-| US-020 | Ajouter un enseignant | 🔴 Must | 2j | US-002 |
-| US-021 | Modifier un enseignant | 🔴 Must | 1j | US-020 |
-| US-022 | Supprimer un enseignant | 🔴 Must | 1j | US-020 |
-| US-023 | Liste des enseignants | 🔴 Must | 1j | US-020 |
+## J2 — Élèves & Classes
 
----
-
-## Epic QR Code & Cartes
-
-| ID | Libellé | Priorité | Estimation | Dépendances |
-|----|---------|----------|------------|-------------|
-| US-024 | Générer un QR Code pour un élève | 🔴 Must | 3j | US-006 |
-| US-025 | Imprimer une carte d'identification | 🔴 Must | 2j | US-024 |
-| US-026 | Scanner un QR Code (identification) | 🟡 Should | 5j | US-024 |
+| ID | Libellé | Jour | Estimation |
+|----|---------|------|------------|
+| US-006 | Ajouter un élève | 🟡 J2 | 3h |
+| US-007 | Modifier un élève | 🟡 J2 | 1h |
+| US-008 | Supprimer un élève | 🟡 J2 | 1h |
+| US-009 | Rechercher un élève | 🟡 J2 | 2h |
+| US-011 | Fiche détail élève (photo, infos) | 🟡 J2 | 2h |
+| US-012 | Créer une classe (section: Maternelle/Primaire/Secondaire, niveau texte) | 🟡 J2 | 1h |
+| US-013 | Modifier une classe | 🟡 J2 | 1h |
+| US-014 | Supprimer une classe | 🟡 J2 | 1h |
+| US-019 | Affecter un élève à une classe | 🟡 J2 | 2h |
+| S-008 | Désigner un enseignant titulaire pour une classe (endpoint + interface) | 🟡 J2 | 1h |
 
 ---
 
-## Epic Présence (Saisie Manuelle)
+## J3 — Enseignants & Cours
 
-| ID | Libellé | Priorité | Estimation | Dépendances |
-|----|---------|----------|------------|-------------|
-| US-027 | Créer une séance de cours | 🔴 Must | 2j | US-015 |
-| US-028 | Enregistrer présence (saisie manuelle depuis une liste) | 🔴 Must | 3j | US-006, US-027 |
-| US-029 | Marquer un retard | 🔴 Must | 1j | US-028 |
-| US-030 | Marquer une absence | 🔴 Must | 1j | US-028 |
-| US-031 | Consulter l'historique des présences | 🟡 Should | 2j | US-028 |
-| US-032 | Rapport de présence par période | 🟡 Should | 3j | US-031 |
-| US-033 | Modifier un statut de présence | 🟡 Should | 1j | US-028 |
-
----
-
-## Epic Notes
-
-| ID | Libellé | Priorité | Estimation | Dépendances |
-|----|---------|----------|------------|-------------|
-| US-034 | Encoder les notes (grille par cours) | 🔴 Must | 3j | US-006, US-015 |
-| US-035 | Modifier une note | 🔴 Must | 1j | US-034 |
-| US-036 | Supprimer une note | 🔴 Must | 1j | US-034 |
-| US-037 | Calcul automatique des moyennes | 🔴 Must | 3j | US-034 |
-| US-038 | Classement des élèves par cours | 🟡 Should | 2j | US-037 |
+| ID | Libellé | Jour | Estimation |
+|----|---------|------|------------|
+| US-015 | Créer un cours | 🟢 J3 | 2h |
+| US-016 | Modifier un cours | 🟢 J3 | 1h |
+| US-017 | Supprimer un cours | 🟢 J3 | 1h |
+| US-018 | Affecter un enseignant à un cours | 🟢 J3 | 2h |
+| US-020 | Ajouter un enseignant (avec flag est_titulaire) | 🟢 J3 | 2h |
+| US-021 | Modifier un enseignant | 🟢 J3 | 1h |
+| US-022 | Supprimer un enseignant | 🟢 J3 | 1h |
+| US-023 | Liste des enseignants | 🟢 J3 | 1h |
+| US-068 | Créer une fiche de leçon (titre, objectifs, matériel, déroulement, évaluation) | 🟢 J3 | 3h |
+| US-069 | Joindre des fichiers à une leçon + imprimer fiche | 🟢 J3 | 2h |
 
 ---
 
-## Epic Bulletins
+## J4 — Présences & Carte Étudiante QR (Fonction Signature)
 
-| ID | Libellé | Priorité | Estimation | Dépendances |
-|----|---------|----------|------------|-------------|
-| US-039 | Générer un bulletin PDF | 🔴 Must | 5j | US-037 |
-| US-040 | Consulter un bulletin en ligne | 🟡 Should | 2j | US-039 |
-| US-041 | Impression groupée des bulletins (par classe) | 🟢 Could | 3j | US-039 |
+> **Fonction signature du logiciel** : La carte PVC personnalisable avec QR Code est l'élément différenciateur. Le QR ne sert pas qu'aux présences — il centralise **toutes** les infos de l'élève (notes, conduite, présences, applications).  
+> **Réservé au concepteur (super-admin)** : la personnalisation du modèle et l'impression sont exclusives au rôle `CONCEPTEUR`. L'école voit l'aperçu et le QR mais ne peut ni modifier ni imprimer.  
+> **Loading states** : aperçu avec skeleton, barre de progression pour impression groupée, spinner sur génération QR.
 
----
-
-## Epic Paiements
-
-| ID | Libellé | Priorité | Estimation | Dépendances |
-|----|---------|----------|------------|-------------|
-| US-042 | Configurer les frais scolaires par classe | 🔴 Must | 2j | US-012 |
-| US-043 | Enregistrer un paiement | 🔴 Must | 3j | US-006, US-042 |
-| US-044 | Générer un reçu PDF | 🔴 Must | 3j | US-043 |
-| US-045 | Consulter le solde d'un élève | 🔴 Must | 2j | US-043 |
-| US-046 | Historique des paiements | 🟡 Should | 2j | US-043 |
-| US-047 | Relance des impayés | 🟢 Could | 2j | US-045 |
+| ID | Libellé | Jour | Estimation | Rôle |
+|----|---------|------|------------|------|
+| US-024 | Générer un QR Code lié au profil complet de l'élève (notes, présence, conduite, activités) | 🔵 J4 | 4h | Tous |
+| US-025 | Créer un modèle de carte PVC personnalisable (photo, nom, classe, QR, logo établissement) | 🔵 J4 | 3h | **Concepteur** |
+| US-025a | **Aperçu carte avant impression** (modale interactive HTML/CSS, mise à jour temps réel des paramètres) | 🔵 J4 | 2h | Tous (lecture) / Concepteur (édition) |
+| US-025b | Imprimer la carte PVC via navigateur (format carte d'identité, barre de progression pour lots) | 🔵 J4 | 2h | **Concepteur** |
+| US-027 | Créer une séance de cours | 🔵 J4 | 2h |
+| US-028 | Enregistrer présence (saisie manuelle depuis une liste) | 🔵 J4 | 4h |
+| US-029 | Marquer un retard | 🔵 J4 | 1h |
+| US-030 | Marquer une absence | 🔵 J4 | 1h |
 
 ---
 
-## Epic Rapports & Statistiques
+> **Loading states J5** : skeleton cards sur dashboard, spinner sur génération de rapports.
 
-| ID | Libellé | Priorité | Estimation | Dépendances |
-|----|---------|----------|------------|-------------|
-| US-048 | Tableau de bord (cartes statistiques) | 🟡 Should | 5j | US-004 |
-| US-049 | Rapport financier (encaissements, impayés) | 🟡 Should | 3j | US-043 |
-| US-050 | Rapport de présence (taux par classe) | 🟡 Should | 3j | US-028 |
-| US-051 | Rapport académique (moyennes, réussite) | 🟡 Should | 3j | US-037 |
+## J5 — Dashboard & Finalisation
 
----
-
-## Epic Administration
-
-| ID | Libellé | Priorité | Estimation | Dépendances |
-|----|---------|----------|------------|-------------|
-| US-052 | Gestion des utilisateurs (CRUD) | 🔴 Must | 3j | US-001 |
-| US-053 | Gestion des rôles et permissions | 🔴 Must | 2j | US-052 |
-| US-054 | Paramétrage du système (année scolaire, etc.) | 🟡 Should | 2j | — |
-| US-055 | Sauvegarde automatique des données | 🟡 Should | 3j | — |
-| US-056 | Journalisation des activités (audit log) | 🟢 Could | 2j | US-052 |
+| ID | Libellé | Jour | Estimation |
+|----|---------|------|------------|
+| US-031 | Consulter l'historique des présences | ⚪ J5 | 2h |
+| US-048 | Tableau de bord (cartes statistiques — vue générale + vue titulaire avec suivi de classe) | ⚪ J5 | 4h |
+| S-005 | Page profil + changement mot de passe | ⚪ J5 | 1h |
+| S-006 | Déploiement (Vercel + Railway + Supabase) | ⚪ J5 | 3h |
+| S-007 | Tests manuels + corrections | ⚪ J5 | 3h |
 
 ---
 
-## Synthèse des Charges
+## J6 — Notifications & Portail Parent
 
-| Epic | Total US | Must | Should | Could | Estimation totale |
-|------|----------|------|--------|-------|-------------------|
-| Authentification & Rôles | 5 | 4 | 1 | 0 | 10j |
-| Élèves | 6 | 5 | 0 | 1 | 11j |
-| Classes & Cours | 8 | 8 | 0 | 0 | 12j |
-| Enseignants | 4 | 4 | 0 | 0 | 5j |
-| QR Code & Cartes | 3 | 2 | 1 | 0 | 10j |
-| Présence | 7 | 4 | 3 | 0 | 13j |
-| Notes | 5 | 4 | 1 | 0 | 10j |
-| Bulletins | 3 | 1 | 1 | 1 | 10j |
-| Paiements | 6 | 4 | 1 | 1 | 14j |
-| Rapports | 4 | 0 | 4 | 0 | 14j |
-| Administration | 5 | 2 | 2 | 1 | 12j |
-| **Total** | **56** | **38** | **14** | **4** | **~121j** |
+> **Loading states J6** : spinner envoi notification, skeleton dashboard parent.
+
+| ID | Libellé | Jour | Estimation |
+|----|---------|------|------------|
+| S-009 | Service notifications (config SMTP + passerelle SMS) | 🟣 J6 | 3h |
+| US-057 | Envoi notification automatique (absence, rappel paiement, résultat) | 🟣 J6 | 4h |
+| US-058 | Portail parent — création compte parent lié aux élèves | 🟣 J6 | 3h |
+| US-059 | Portail parent — dashboard suivi (notes, présence, paiements) | 🟣 J6 | 4h |
+
+---
+
+## J7 — Paiement Mobile Money & Signature Bulletins
+
+> **Loading states J7** : spinner transaction paiement, skeleton génération bulletin.
+
+| ID | Libellé | Jour | Estimation |
+|----|---------|------|------------|
+| US-060 | Intégration API Mobile Money (Orange Money, M-Pesa, Wave) | 🟤 J7 | 5h |
+| US-061 | Interface paiement Mobile Money (montant, référence, confirmation) | 🟤 J7 | 3h |
+| US-062 | Historique transaction Mobile Money + reçu | 🟤 J7 | 2h |
+| US-063 | Signature électronique des bulletins (validation directeur, cachet numérique) | 🟤 J7 | 4h |
+
+---
+
+## J8 — Bibliothèque Numérique & Reconnaissance Faciale
+
+> **Loading states J8** : spinner upload fichier, skeleton liste ressources, spinner scan facial.
+
+| ID | Libellé | Jour | Estimation |
+|----|---------|------|------------|
+| US-064 | Bibliothèque numérique — upload ressources (PDF, images, liens) | ⚫ J8 | 3h |
+| US-065 | Catégorisation, recherche et partage de ressources par classe | ⚫ J8 | 2h |
+| US-066 | Reconnaissance faciale — intégration caméra + identification élève | ⚫ J8 | 5h |
+| US-067 | Reconnaissance faciale — lien avec présence (marquer présent via visage) | ⚫ J8 | 3h |
+
+---
+
+## Synthèse
+
+| Jour | US | Estimation |
+|------|----|------------|
+| J1 (Setup & Auth) | 8 | ~15h |
+| J2 (Élèves & Classes) | 10 | ~15h |
+| J3 (Enseignants & Cours) | 10 | ~16h |
+| J4 (Présences & QR Code) | 8 | ~19h |
+| J5 (Dashboard & Deploy) | 5 | ~13h |
+| J6 (Notifications & Parent) | 4 | ~14h |
+| J7 (Mobile Money & Signature) | 4 | ~14h |
+| J8 (Bibliothèque & Faciale) | 4 | ~13h |
+| **Total** | **53** | **~119h** |
+
+---
+
+> **Multi-école** : le middleware filtre automatiquement par `ecole_id` sur chaque requête. Chaque école a ses propres utilisateurs, classes, élèves, cours et paramètres. L'admin peut créer une nouvelle école via seed ou interface (v2).
+
+---
+
+## Fonctionnalités repoussées en v3
+
+- US-005 : Réinitialisation mot de passe
+- US-010 : Import CSV élèves
+- US-026 : Scan QR Code par webcam
+- US-032 : Rapport de présence par période
+- US-033 : Modifier statut présence existant
+- US-034 à US-038 : Notes et moyennes (partiellement dans portail parent)
+- US-039 à US-041 : Bulletins PDF
+- US-042 à US-047 : Paiements et reçus
+- US-049 à US-051 : Rapports avancés
+- US-052 à US-056 : Administration (sauvegardes, audit, rôles)
+- Application mobile Android/iOS (React Native)
+- Tableau de bord IA

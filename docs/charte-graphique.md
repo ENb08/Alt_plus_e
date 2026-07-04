@@ -90,12 +90,90 @@
 
 ## Logo & QR Code
 
+> **Multi-école** : chaque école a son propre logo, ses couleurs et son modèle de carte. Les logos sont stockés dans `/uploads/<ecole_slug>/logo/`.
+
 | Usage | Règle |
 |-------|-------|
 | Logo sur fond clair | Version complète (couleurs natives) |
 | Logo sur fond foncé | Version inversée (blanc + accent) |
 | QR Code | Fond `#FFFFFF`, modules `#102030` |
 | Cartes élèves | Fond `#FFFFFF`, QR Code centré |
+
+---
+
+## Modèle de Carte PVC (Fonction Signature)
+
+La carte PVC personnalisable est l'élément différenciateur du logiciel. Le QR Code embarque un lien vers le **profil complet** de l'élève.
+
+### Recto de la carte (`85.6mm × 54mm` — format CR-80)
+
+```
+┌──────────────────────────────────────┐
+│  ┌──────┐                            │
+│  │      │   ÉCOLE SECONDAIRE XYZ     │
+│  │ PHOTO│                            │
+│  │      │   Jean KABAMBA             │
+│  └──────┘   Classe : 3e A           │
+│              Matricule : 2024-001    │
+│                                     │
+│           [████████████████]        │
+│           [███  QR CODE  ███]       │
+│           [████████████████]        │
+│                                     │
+│  ──────────────────────────────     │
+│  Année scolaire : 2026-2027         │
+└──────────────────────────────────────┘
+```
+
+### Éléments recto
+| Zone | Contenu | Police/Couleur |
+|------|---------|---------------|
+| Fond | Dégradé primaire ou blanc | `#102030` → `#1A3A5A` ou `#FFFFFF` |
+| Photo | 35×45mm, positionnée à gauche | — |
+| Nom | Prénom + Postnom + Nom | Inter Bold, `#FFFFFF` ou `#1F2937` selon fond |
+| Classe | Niveau + Section | Inter Regular, accent `#FF751D` |
+| Matricule | Année + numéro unique | Inter Regular, `#9CA3AF` |
+| QR Code | 25×25mm, fond blanc, modules `#102030` | Lié à `/api/v1/qr/eleve/:id/profil` |
+| Logo établissement | Haut droit | PNG fourni par l'établissement |
+
+### Verso (optionnel)
+```
+┌──────────────────────────────────────┐
+│  INFORMATIONS                        │
+│  Téléphone parent : +243 XXX XXX XXX│
+│  Adresse : 123, Av. Kalamu, Kinshasa │
+│                                     │
+│  [  Scannez le QR pour voir les     │
+│     notes, présences, conduite,     │
+│     et activités de l'élève  ]      │
+│                                     │
+│  Carte valable jusqu'au : 30/06/2027│
+└──────────────────────────────────────┘
+```
+
+### Personnalisation (paramétrable par l'admin, par école)
+| Option | Valeurs par défaut | Description |
+|--------|-------------------|-------------|
+| Couleur fond recto | Primaire `#102030` | Dégradé ou uni (propre à l'école) |
+| Couleur texte recto | Blanc `#FFFFFF` | Adapté au fond |
+| Afficher photo | Oui | Booléen |
+| Afficher matricule | Oui | Booléen |
+| Logo établissement | Non défini | Image uploadée (stockée par école) |
+| Mention verso | "Scannez le QR..." | Texte libre |
+| Date expiration | Fin année scolaire | Automatique |
+
+### Aperçu avant impression
+- Modale plein écran avec aperçu HTML/CSS **temps réel** de la carte
+- Mise à jour instantanée lors du changement des paramètres (couleur, logo, champs)
+- Skeleton de chargement pendant la génération de l'aperçu
+- Bouton "Télécharger le PDF" ou "Imprimer" après validation visuelle
+
+### Règles d'impression
+- Format : CR-80 (85.6 × 54mm) ou CR-100 (98.5 × 67mm)
+- Résolution minimale : 300 DPI
+- Fond perdu : 3mm de chaque côté
+- Orientation : paysage
+- Type de carte : PVC blanc ou métallisé
 
 ---
 
