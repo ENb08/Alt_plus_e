@@ -13,9 +13,9 @@
 | ID | Libellé | Jour | Estimation |
 |----|---------|------|------------|
 | S-001 | Initialiser backend (Bun + Elysia + Prisma + PostgreSQL) | 🔴 J1 | 2h | ok
-| S-002 | Initialiser frontend (React + TypeScript + Tailwind + React Query) | 🔴 J1 | 2h |
-| S-003 | Schéma Prisma avec entité ECOLE + ecole_id sur toutes les tables | 🔴 J1 | 3h |
-| US-001 | Seed de l'école + administrateur principal (création école + admin) | 🔴 J1 | 1h |
+| S-002 | Initialiser frontend (React + TypeScript + Tailwind + React Query) | 🔴 J1 | 2h | ok
+| S-003 | Schéma Prisma avec entité ECOLE + ecole_id sur toutes les tables | 🔴 J1 | 3h | ok
+| US-001 | Seed de l'école + administrateur principal (création école + admin) | 🔴 J1 | 1h | ok 
 | US-002 | Connexion multi-école (par sous-domaine — email + mot de passe uniquement) | 🔴 J1 | 3h |
 | US-003 | Déconnexion | 🔴 J1 | 1h |
 | US-004 | Interface adaptée au rôle (layout sidebar, routing, school context) | 🔴 J1 | 3h |
