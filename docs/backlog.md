@@ -12,7 +12,7 @@
 
 | ID | Libellé | Jour | Estimation |
 |----|---------|------|------------|
-| S-001 | Initialiser backend (Bun + Elysia + Prisma + PostgreSQL) | 🔴 J1 | 2h |
+| S-001 | Initialiser backend (Bun + Elysia + Prisma + PostgreSQL) | 🔴 J1 | 2h | ok 
 | S-002 | Initialiser frontend (React + TypeScript + Tailwind + React Query) | 🔴 J1 | 2h |
 | S-003 | Schéma Prisma avec entité ECOLE + ecole_id sur toutes les tables | 🔴 J1 | 3h |
 | US-001 | Seed de l'école + administrateur principal (création école + admin) | 🔴 J1 | 1h |
@@ -61,8 +61,8 @@
 
 ## J4 — Présences & Carte Étudiante QR (Fonction Signature)
 
-> **Fonction signature du logiciel** : La carte PVC personnalisable avec QR Code est l'élément différenciateur. Le QR ne sert pas qu'aux présences — il centralise **toutes** les infos de l'élève (notes, conduite, présences, applications).  
-> **Réservé au concepteur (super-admin)** : la personnalisation du modèle et l'impression sont exclusives au rôle `CONCEPTEUR`. L'école voit l'aperçu et le QR mais ne peut ni modifier ni imprimer.  
+> **Fonction signature du logiciel** : La carte PVC personnalisable avec QR Code est l'élément différenciateur. Le QR ne sert pas qu'aux présences — il centralise **toutes** les infos de l'élève (notes, conduite, présences, applications).
+> **Réservé au concepteur (super-admin)** : la personnalisation du modèle et l'impression sont exclusives au rôle `CONCEPTEUR`. L'école voit l'aperçu et le QR mais ne peut ni modifier ni imprimer.
 > **Loading states** : aperçu avec skeleton, barre de progression pour impression groupée, spinner sur génération QR.
 
 | ID | Libellé | Jour | Estimation | Rôle |
