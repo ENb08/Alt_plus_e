@@ -17,8 +17,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-100">
-        <p className="text-gray-500">Chargement...</p>
+      <div className="flex min-h-screen items-center justify-center bg-bg-light">
+        <p className="text-text-secondary">Chargement...</p>
       </div>
     );
   }
@@ -28,7 +28,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div className="flex min-h-screen">
       <Sidebar />
-      <main className="flex-1 overflow-y-auto bg-gray-100 p-6">{children}</main>
+      <main className="flex-1 overflow-y-auto bg-bg-light p-6">{children}</main>
     </div>
   );
 }
