@@ -11,6 +11,10 @@
   "peerDependencies": {
     "typescript": "^5"
   },
+  "scripts": {
+    "start": "bun run index.ts",
+    "dev": "bun --watch run index.ts"
+  },
   "dependencies": {
     "@elysiajs/cors": "^1.4.2",
     "@elysiajs/jwt": "^1.4.2",
@@ -18,6 +22,7 @@
     "@prisma/adapter-neon": "^7.8.0",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "dotenv": "^16.4.7",
     "elysia": "^1.4.29",
     "pg": "^8.22.0"
   }

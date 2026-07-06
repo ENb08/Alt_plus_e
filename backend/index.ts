@@ -55,7 +55,7 @@ const app = new Elysia()
   .use(
     jwt({
       name: "jwt",
-      secret: process.env.JWT_SECRET!,
+      secret: process.env.JWT_SECRET || "altq-dev-secret-change-in-production",
       exp: "7d",
     })
   )
