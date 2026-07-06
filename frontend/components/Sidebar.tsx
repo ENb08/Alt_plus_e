@@ -3,103 +3,227 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  LayoutDashboard, GraduationCap, Users, BookOpen, DollarSign,
+  ClipboardCheck, FileText, School, ChevronLeft, LogOut, BarChart3,
+  CreditCard, Calendar, Bell, TrendingUp, Settings, ChevronDown,
+  Library, PiggyBank,
+} from "lucide-react";
+import { useState } from "react";
 
-const roleMenus: Record<string, { label: string; href: string }[]> = {
-  CONCEPTEUR: [
-    { label: "Tableau de bord", href: "/" },
-    { label: "Écoles", href: "/ecoles" },
-    { label: "Utilisateurs", href: "/utilisateurs" },
-  ],
-  ADMINISTRATEUR: [
-    { label: "Tableau de bord", href: "/" },
-    { label: "Classes", href: "/classes" },
-    { label: "Enseignants", href: "/enseignants" },
-    { label: "Élèves", href: "/eleves" },
-    { label: "Frais scolaires", href: "/frais" },
-    { label: "Utilisateurs", href: "/utilisateurs" },
-  ],
-  DIRECTEUR: [
-    { label: "Tableau de bord", href: "/" },
-    { label: "Classes", href: "/classes" },
-    { label: "Enseignants", href: "/enseignants" },
-    { label: "Élèves", href: "/eleves" },
-    { label: "Rapports", href: "/rapports" },
-  ],
-  ENSEIGNANT: [
-    { label: "Tableau de bord", href: "/" },
-    { label: "Mes classes", href: "/classes" },
-    { label: "Présences", href: "/presences" },
-    { label: "Notes", href: "/notes" },
-    { label: "Leçons", href: "/legons" },
-  ],
-  COMPTABLE: [
-    { label: "Tableau de bord", href: "/" },
-    { label: "Paiements", href: "/paiements" },
-    { label: "Frais", href: "/frais" },
-    { label: "Reçus", href: "/recus" },
-  ],
-  ELEVE: [
-    { label: "Tableau de bord", href: "/" },
-    { label: "Mes notes", href: "/notes" },
-    { label: "Présences", href: "/presences" },
-    { label: "Emploi du temps", href: "/emploi-du-temps" },
-  ],
-  PARENT: [
-    { label: "Tableau de bord", href: "/" },
-    { label: "Mes enfants", href: "/enfants" },
-    { label: "Notes", href: "/notes" },
-    { label: "Paiements", href: "/paiements" },
-  ],
-};
+type MenuItem = { label: string; href: string; icon: any };
+
+const menuGroups: { category: string; items: MenuItem[] }[] = [
+  {
+    category: "Tableau de bord",
+    items: [
+      { label: "Dashboard", href: "/", icon: LayoutDashboard },
+    ],
+  },
+  {
+    category: "Académique",
+    items: [
+      { label: "Élèves", href: "/eleves", icon: Users },
+      { label: "Enseignants", href: "/enseignants", icon: GraduationCap },
+      { label: "Classes", href: "/classes", icon: BookOpen },
+      { label: "Présences", href: "/presences", icon: ClipboardCheck },
+      { label: "Notes", href: "/notes", icon: FileText },
+      { label: "Bulletins", href: "/bulletins", icon: FileText },
+    ],
+  },
+  {
+    category: "Finances",
+    items: [
+      { label: "Paiements", href: "/paiements", icon: DollarSign },
+      { label: "Dépenses", href: "/depenses", icon: TrendingUp },
+      { label: "Comptabilité", href: "/comptabilite", icon: PiggyBank },
+    ],
+  },
+  {
+    category: "Rapports",
+    items: [
+      { label: "Rapports", href: "/rapports", icon: BarChart3 },
+    ],
+  },
+  {
+    category: "Paramètres",
+    items: [
+      { label: "Paramètres", href: "/parametres", icon: Settings },
+    ],
+  },
+];
 
 export default function Sidebar() {
   const pathname = usePathname();
   const { utilisateur, ecole, logout } = useAuth();
-  const menus = roleMenus[utilisateur?.role ?? ""] ?? [];
+  const [collapsed, setCollapsed] = useState(false);
+
+  const initials = utilisateur?.nom
+    ?.split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2) ?? "A";
 
   return (
-    <aside className="flex h-screen w-64 flex-col bg-primary text-white">
-      <div className="border-b border-white/10 p-6">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent font-bold text-white">
-            A
-          </div>
-          <div>
-            <h2 className="text-base font-bold">{ecole?.nom ?? "Alt+E"}</h2>
-            <p className="text-xs text-text-muted">{utilisateur?.role ?? "..."}</p>
-          </div>
-        </div>
+    <motion.aside
+      className="relative z-30 flex flex-col border-r border-gray-100 bg-white"
+      animate={{ width: collapsed ? 64 : 256 }}
+      transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
+    >
+      {/* Logo */}
+      <div className={cn("flex items-center border-b border-gray-100", collapsed ? "h-14 justify-center" : "h-14 gap-3 px-5")}>
+        <motion.div
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#FF6B1A] text-xs font-bold text-white shadow-sm shadow-[#FF6B1A]/20"
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          A
+        </motion.div>
+        <AnimatePresence>
+          {!collapsed && (
+            <motion.div
+              initial={{ opacity: 0, width: 0 }}
+              animate={{ opacity: 1, width: "auto" }}
+              exit={{ opacity: 0, width: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              <p className="text-sm font-semibold text-[#13233F]">Alt-Q Plus</p>
+              <p className="text-[10px] text-gray-400">Gestion Scolaire</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      <nav className="flex-1 space-y-1 overflow-y-auto p-4">
-        {menus.map((item) => {
-          const actif = pathname === item.href;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`relative flex items-center rounded-lg px-4 py-2.5 text-sm font-medium transition ${
-                actif
-                  ? "bg-accent/10 text-white before:absolute before:left-0 before:top-1/2 before:h-5/6 before:w-1 before:-translate-y-1/2 before:rounded-r before:bg-accent"
-                  : "text-text-muted hover:bg-white/5 hover:text-white"
-              }`}
-            >
-              {item.label}
-            </Link>
-          );
-        })}
+      {/* School context */}
+      <AnimatePresence>
+        {!collapsed && (
+          <motion.div
+            className="border-b border-gray-50 px-5 py-3"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+          >
+            <p className="text-xs font-medium text-[#FF6B1A]">{ecole?.nom ?? "École"}</p>
+            <p className="text-[10px] text-gray-400">{utilisateur?.role}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Navigation */}
+      <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
+        {menuGroups.map((group) => (
+          <div key={group.category} className="mb-3">
+            <AnimatePresence>
+              {!collapsed && (
+                <motion.p
+                  className="mb-1.5 px-2 text-[11px] font-semibold uppercase tracking-widest text-gray-300"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  {group.category}
+                </motion.p>
+              )}
+            </AnimatePresence>
+            <div className="space-y-0.5">
+              {group.items.map((item) => {
+                const actif = pathname === item.href;
+                const Icon = item.icon;
+                return (
+                  <Link key={item.href} href={item.href}>
+                    <motion.div
+                      className={cn(
+                        "flex items-center rounded-xl text-sm font-medium transition-colors",
+                        collapsed ? "justify-center py-2.5" : "gap-3 px-3 py-2.5",
+                        actif
+                          ? "bg-[#FF6B1A]/10 text-[#FF6B1A]"
+                          : "text-gray-400 hover:bg-gray-50 hover:text-[#13233F]"
+                      )}
+                      whileHover={{ x: collapsed ? 0 : 3 }}
+                      whileTap={{ scale: 0.97 }}
+                    >
+                      <Icon className="h-4 w-4 shrink-0" />
+                      <AnimatePresence>
+                        {!collapsed && (
+                          <motion.span
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.15 }}
+                          >
+                            {item.label}
+                          </motion.span>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
-      <div className="border-t border-white/10 p-4">
-        <p className="mb-2 truncate text-sm text-text-muted">{utilisateur?.nom}</p>
-        <p className="mb-3 truncate text-xs text-text-muted">{utilisateur?.email}</p>
-        <button
-          onClick={logout}
-          className="w-full rounded-lg border border-white/10 px-3 py-2 text-sm text-text-muted transition hover:border-error hover:bg-error/10 hover:text-error"
-        >
-          Déconnexion
-        </button>
+      {/* Bottom */}
+      <div className="border-t border-gray-100 p-3">
+        <div className={cn("flex gap-1", collapsed && "flex-col")}>
+          <motion.button
+            className={cn(
+              "flex items-center rounded-xl text-gray-400 transition-colors hover:bg-gray-50 hover:text-[#13233F]",
+              collapsed ? "justify-center py-2.5" : "gap-2 px-3 py-2.5 text-sm"
+            )}
+            onClick={() => setCollapsed(!collapsed)}
+            whileTap={{ scale: 0.95 }}
+          >
+            <ChevronLeft className={cn("h-4 w-4 transition-transform duration-300", collapsed && "rotate-180")} />
+            <AnimatePresence>
+              {!collapsed && (
+                <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  Réduire
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
+          <motion.button
+            className={cn(
+              "flex items-center rounded-xl text-gray-400 transition-colors hover:bg-red-50 hover:text-red-500",
+              collapsed ? "justify-center py-2.5" : "gap-2 px-3 py-2.5 text-sm"
+            )}
+            onClick={logout}
+            whileTap={{ scale: 0.95 }}
+          >
+            <LogOut className="h-4 w-4" />
+            <AnimatePresence>
+              {!collapsed && (
+                <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  Déconnexion
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
+        </div>
+
+        {/* User */}
+        {!collapsed && (
+          <motion.div
+            className="mt-3 flex items-center gap-3 rounded-xl bg-gray-50/50 px-3 py-2.5"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#FF6B1A]/10 text-[10px] font-bold text-[#FF6B1A]">
+              {initials}
+            </div>
+            <div className="overflow-hidden">
+              <p className="truncate text-xs font-medium text-[#13233F]">{utilisateur?.nom}</p>
+              <p className="truncate text-[10px] text-gray-400">{utilisateur?.email}</p>
+            </div>
+          </motion.div>
+        )}
       </div>
-    </aside>
+    </motion.aside>
   );
 }

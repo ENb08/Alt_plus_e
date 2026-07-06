@@ -51,22 +51,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  function getSubdomain(): string | undefined {
-    if (typeof window === "undefined") return undefined;
-    const parts = window.location.hostname.split(".");
-    if (parts.length >= 2 && parts[0] !== "localhost" && parts[0] !== "www") {
-      return parts[0];
-    }
-    return undefined;
+  function getEcoleSlug(): string {
+    if (typeof window === "undefined") return "default";
+    const hostname = window.location.hostname;
+    if (hostname === "localhost" || hostname === "127.0.0.1") return "default";
+    const parts = hostname.split(".");
+    if (parts.length >= 2 && parts[0] !== "www") return parts[0];
+    return "default";
   }
 
   const login = async (email: string, motDePasse: string) => {
-    const body: Record<string, string> = { email, mot_de_passe: motDePasse };
-    const slug = getSubdomain();
-    if (slug) body.ecole_slug = slug;
     const data = await api("/api/auth/login", {
       method: "POST",
-      body,
+      body: { email, mot_de_passe: motDePasse, ecole_slug: getEcoleSlug() },
     });
     localStorage.setItem("token", data.token);
     setToken(data.token);

@@ -2,6 +2,20 @@ import { Elysia, t } from "elysia";
 import { prisma } from "../lib/prisma.ts";
 import { authMiddleware } from "../middleware/auth.ts";
 
+const RESERVED_SLUGS = new Set([
+  "api", "admin", "www", "app", "login", "register", "auth",
+  "demo", "test", "dev", "staging", "mail", "docs", "help",
+  "support", "status", "blog", "about", "contact",
+]);
+
+function sanitizeSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 export const authRoutes = new Elysia({ prefix: "/api/auth" })
   .post(
     "/login",
@@ -69,6 +83,99 @@ export const authRoutes = new Elysia({ prefix: "/api/auth" })
         email: t.String({ format: "email" }),
         mot_de_passe: t.String({ minLength: 1 }),
         ecole_slug: t.Optional(t.String()),
+      }),
+    }
+  )
+
+  .post(
+    "/register-ecole",
+    async ({ body, set, jwt }) => {
+      const { nom_ecole, slug, email_admin, mot_de_passe_admin, nom_admin } = body;
+
+      const slugFinal = slug || sanitizeSlug(nom_ecole);
+      if (!slugFinal || slugFinal.length < 3) {
+        set.status = 400;
+        return { erreur: "Le slug doit contenir au moins 3 caractères" };
+      }
+      if (slugFinal.length > 50) {
+        set.status = 400;
+        return { erreur: "Le slug est trop long (max 50 caractères)" };
+      }
+      if (!/^[a-z0-9-]+$/.test(slugFinal)) {
+        set.status = 400;
+        return { erreur: "Le slug ne peut contenir que des lettres minuscules, chiffres et tirets" };
+      }
+      if (RESERVED_SLUGS.has(slugFinal)) {
+        set.status = 400;
+        return { erreur: "Ce slug est réservé" };
+      }
+
+      const slugExists = await prisma.eCOLE.findUnique({ where: { slug: slugFinal } });
+      if (slugExists) {
+        set.status = 409;
+        return { erreur: "Ce slug est déjà utilisé par une autre école" };
+      }
+
+      const emailExists = await prisma.uTILISATEUR.findFirst({
+        where: { email: email_admin },
+      });
+      if (emailExists) {
+        set.status = 409;
+        return { erreur: "Cet email est déjà utilisé" };
+      }
+
+      const hashed = await Bun.password.hash(mot_de_passe_admin);
+
+      const ecole = await prisma.eCOLE.create({
+        data: {
+          nom: nom_ecole,
+          slug: slugFinal,
+          actif: true,
+          utilisateurs: {
+            create: {
+              nom: nom_admin || "Administrateur",
+              email: email_admin,
+              mot_de_passe: hashed,
+              role: "ADMINISTRATEUR",
+              actif: true,
+            },
+          },
+        },
+        include: { utilisateurs: { take: 1 } },
+      });
+
+      const admin = ecole.utilisateurs[0];
+
+      const token = await jwt.sign({
+        id: admin.id,
+        email: admin.email,
+        role: admin.role,
+        ecole_id: ecole.id,
+        ecole_slug: ecole.slug,
+      });
+
+      return {
+        token,
+        utilisateur: {
+          id: admin.id,
+          nom: admin.nom,
+          email: admin.email,
+          role: admin.role,
+        },
+        ecole: {
+          id: ecole.id,
+          nom: ecole.nom,
+          slug: ecole.slug,
+        },
+      };
+    },
+    {
+      body: t.Object({
+        nom_ecole: t.String({ minLength: 2 }),
+        slug: t.Optional(t.String()),
+        email_admin: t.String({ format: "email" }),
+        mot_de_passe_admin: t.String({ minLength: 6 }),
+        nom_admin: t.Optional(t.String()),
       }),
     }
   )

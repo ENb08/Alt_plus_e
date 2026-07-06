@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
 type RequestOptions = {
   method?: string;
@@ -18,7 +18,7 @@ export async function api(path: string, { method = "GET", body, token }: Request
     body: body ? JSON.stringify(body) : undefined,
   });
 
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.erreur || "Erreur serveur");
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.erreur || `Erreur ${res.status}`);
   return data;
 }
