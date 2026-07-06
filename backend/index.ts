@@ -37,6 +37,15 @@ async function autoSeed() {
 await autoSeed();
 
 const app = new Elysia()
+  .onError(({ code, error, set }) => {
+    if (code === "VALIDATION") {
+      set.status = 400;
+      return { erreur: error.message };
+    }
+    console.error(`[${code}]`, error);
+    set.status = 500;
+    return { erreur: "Erreur interne du serveur" };
+  })
   .use(
     cors({
       origin: ["http://localhost:3000"],

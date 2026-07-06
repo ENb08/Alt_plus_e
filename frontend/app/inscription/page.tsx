@@ -60,8 +60,10 @@ export default function InscriptionPage() {
         }),
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.erreur || "Erreur lors de l'inscription");
+      const text = await res.text();
+      let data;
+      try { data = JSON.parse(text); } catch { data = {}; }
+      if (!res.ok) throw new Error(data?.erreur || `Erreur ${res.status}`);
 
       localStorage.setItem("token", data.token);
       router.push("/");

@@ -18,7 +18,9 @@ export async function api(path: string, { method = "GET", body, token }: Request
     body: body ? JSON.stringify(body) : undefined,
   });
 
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.erreur || `Erreur ${res.status}`);
+  const text = await res.text();
+  let data: any = {};
+  try { data = JSON.parse(text); } catch {}
+  if (!res.ok) throw new Error(data?.erreur || `Erreur ${res.status}`);
   return data;
 }
