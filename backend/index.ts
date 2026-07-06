@@ -35,7 +35,11 @@ async function autoSeed() {
   console.log(`✓ Admin créé : admin@ecole.demo / admin123 (école: ${ecole.slug})`);
 }
 
-await autoSeed();
+try {
+  await autoSeed();
+} catch (e) {
+  console.error("⚠ Auto-seed échoué (base déjà initialisée ou erreur de connexion) :", e);
+}
 
 const app = new Elysia()
   .onError(({ code, error, set }) => {
@@ -43,7 +47,11 @@ const app = new Elysia()
       set.status = 400;
       return { erreur: error.message };
     }
-    console.error(`[${code}]`, error);
+    if (code === "PARSE") {
+      set.status = 400;
+      return { erreur: "Corps de requête invalide" };
+    }
+    console.error(`[${code}]`, error?.message ?? error);
     set.status = 500;
     return { erreur: "Erreur interne du serveur" };
   })
