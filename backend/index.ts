@@ -4,6 +4,7 @@ import { cors } from "@elysiajs/cors";
 import { jwt } from "@elysiajs/jwt";
 import { authRoutes } from "./src/routes/auth.ts";
 import { prisma } from "./src/lib/prisma.ts";
+import { hashPassword } from "./src/lib/password.ts";
 
 async function autoSeed() {
   const existing = await prisma.eCOLE.findFirst({ where: { slug: "default" } });
@@ -19,7 +20,7 @@ async function autoSeed() {
     },
   });
 
-  const password = await Bun.password.hash("admin123");
+  const password = await hashPassword("admin123");
   await prisma.uTILISATEUR.create({
     data: {
       nom: "Administrateur",

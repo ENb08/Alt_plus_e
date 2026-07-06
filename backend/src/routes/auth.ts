@@ -1,6 +1,7 @@
 import { Elysia, t } from "elysia";
 import { prisma } from "../lib/prisma.ts";
 import { authMiddleware } from "../middleware/auth.ts";
+import { hashPassword, verifyPassword } from "../lib/password.ts";
 
 const RESERVED_SLUGS = new Set([
   "api", "admin", "www", "app", "login", "register", "auth",
@@ -45,7 +46,7 @@ export const authRoutes = new Elysia({ prefix: "/api/auth" })
         return { erreur: "Identifiants invalides" };
       }
 
-      const valide = await Bun.password.verify(
+      const valide = await verifyPassword(
         mot_de_passe,
         utilisateur.mot_de_passe
       );
@@ -124,7 +125,7 @@ export const authRoutes = new Elysia({ prefix: "/api/auth" })
         return { erreur: "Cet email est déjà utilisé" };
       }
 
-      const hashed = await Bun.password.hash(mot_de_passe_admin);
+      const hashed = await hashPassword(mot_de_passe_admin);
 
       const ecole = await prisma.eCOLE.create({
         data: {
