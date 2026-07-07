@@ -55,6 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (typeof window === "undefined") return "default";
     const hostname = window.location.hostname;
     if (hostname === "localhost" || hostname === "127.0.0.1") return "default";
+    if (hostname.includes("onrender.com") || hostname.includes("vercel.app")) return "default";
     const parts = hostname.split(".");
     if (parts.length >= 2 && parts[0] !== "www") return parts[0];
     return "default";
