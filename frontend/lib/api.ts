@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
+const NEXT_PUBLIC_API_URL= "https://alt-plus-e.onrender.com"
 
 type RequestOptions = {
   method?: string;
@@ -12,7 +12,7 @@ export async function api(path: string, { method = "GET", body, token }: Request
   };
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
-  const res = await fetch(`${API_URL}${path}`, {
+  const res = await fetch(`${NEXT_PUBLIC_API_URL}${path}`, {
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined,
