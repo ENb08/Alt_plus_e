@@ -57,7 +57,12 @@ const app = new Elysia()
   })
   .use(
     cors({
-      origin: ["http://localhost:3000"],
+      origin: [
+        "http://localhost:3000",
+        "https://alt-plus-ecole.onrender.com",
+      ],
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
       credentials: true,
     })
   )
