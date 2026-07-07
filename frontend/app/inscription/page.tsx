@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { GraduationCap, Building2, Mail, User, Lock, ArrowRight, Sparkles, Check, AlertCircle } from "lucide-react";
+import { api } from "@/lib/api";
 
 function sanitizeSlug(name: string): string {
   return name
@@ -48,22 +49,16 @@ export default function InscriptionPage() {
 
     setLoading(true);
     try {
-      const res = await fetch("/api/auth/register-ecole", {
+      const data = await api("/api/auth/register-ecole", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+        body: {
           nom_ecole: nom,
           slug: slug || undefined,
           email_admin: email,
           mot_de_passe_admin: password,
           nom_admin: nomAdmin || undefined,
-        }),
+        },
       });
-
-      const text = await res.text();
-      let data;
-      try { data = JSON.parse(text); } catch { data = {}; }
-      if (!res.ok) throw new Error(data?.erreur || `Erreur ${res.status}`);
 
       localStorage.setItem("token", data.token);
       router.push("/");
