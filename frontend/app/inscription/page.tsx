@@ -49,7 +49,7 @@ export default function InscriptionPage() {
 
     setLoading(true);
     try {
-      const data = await api("/api/auth/register-ecole", {
+      await api("/api/auth/register-ecole", {
         method: "POST",
         body: {
           nom_ecole: nom,
@@ -60,8 +60,7 @@ export default function InscriptionPage() {
         },
       });
 
-      localStorage.setItem("token", data.token);
-      router.push("/");
+      router.push(`/login?success=inscription&email=${encodeURIComponent(email)}&slug=${encodeURIComponent(slug)}`);
     } catch (err) {
       setErreur(err instanceof Error ? err.message : "Erreur de connexion");
     } finally {

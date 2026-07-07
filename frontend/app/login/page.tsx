@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { GraduationCap, BookOpen, Users, DollarSign, TrendingUp, CheckCheck, QrCode, Clock, UserCheck, BarChart3, Sparkles } from "lucide-react";
@@ -163,17 +164,28 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
   const [erreur, setErreur] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const [remember, setRemember] = useState(false);
+  const slugRef = useRef<string | null>(null);
   const { login } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("email")) setEmail(params.get("email")!);
+    if (params.get("slug")) slugRef.current = params.get("slug");
+    if (params.get("success") === "inscription") {
+      setSuccess("École créée ! Connectez-vous avec vos identifiants.");
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErreur("");
     setLoading(true);
     try {
-      await login(email, motDePasse);
+      await login(email, motDePasse, slugRef.current ?? undefined);
       router.push("/");
     } catch (err) {
       setErreur(err instanceof Error ? err.message : "Erreur de connexion");
@@ -293,10 +305,22 @@ export default function LoginPage() {
             <p className="mt-1 text-sm text-gray-400">Connectez-vous à votre espace</p>
           </motion.div>
 
-          {/* Error */}
+          {/* Error / Success */}
           <AnimatePresence>
+            {success && (
+              <motion.div
+                key="success"
+                className="mb-5 mt-4 flex items-center gap-2 rounded-xl bg-emerald-50 p-3 text-sm text-emerald-600"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+              >
+                <span>{success}</span>
+              </motion.div>
+            )}
             {erreur && (
               <motion.div
+                key="erreur"
                 className="mb-5 mt-4 flex items-center gap-2 rounded-xl bg-red-50 p-3 text-sm text-red-500"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}

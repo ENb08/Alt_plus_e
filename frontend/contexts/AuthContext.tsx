@@ -21,7 +21,7 @@ type AuthContextType = {
   utilisateur: Utilisateur | null;
   ecole: Ecole | null;
   loading: boolean;
-  login: (email: string, motDePasse: string) => Promise<void>;
+  login: (email: string, motDePasse: string, ecoleSlug?: string) => Promise<void>;
   logout: () => void;
 };
 
@@ -61,10 +61,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return "default";
   }
 
-  const login = async (email: string, motDePasse: string) => {
+  const login = async (email: string, motDePasse: string, ecoleSlug?: string) => {
     const data = await api("/api/auth/login", {
       method: "POST",
-      body: { email, mot_de_passe: motDePasse, ecole_slug: getEcoleSlug() },
+      body: { email, mot_de_passe: motDePasse, ecole_slug: ecoleSlug || getEcoleSlug() },
     });
     localStorage.setItem("token", data.token);
     setToken(data.token);
