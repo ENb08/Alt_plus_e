@@ -224,15 +224,42 @@ export const authRoutes = new Elysia({ prefix: "/api/auth" })
         nom: true,
         email: true,
         role: true,
+        actif: true,
         ecole_id: true,
         ecole: { select: { id: true, nom: true, slug: true } },
       },
     });
 
-    if (!utilisateur) {
+    if (!utilisateur || !utilisateur.actif) {
       set.status = 401;
-      return { erreur: "Utilisateur introuvable" };
+      return { erreur: "Compte désactivé ou introuvable" };
     }
 
     return { utilisateur };
+  })
+
+  .get("/session/verify", async ({ jwt, headers, set }) => {
+    const auth = headers["authorization"];
+    if (!auth?.startsWith("Bearer ")) {
+      set.status = 401;
+      return { erreur: "Token manquant" };
+    }
+
+    const payload = await jwt.verify(auth.slice(7));
+    if (!payload || !payload.id) {
+      set.status = 401;
+      return { erreur: "Token invalide" };
+    }
+
+    const utilisateur = await prisma.uTILISATEUR.findUnique({
+      where: { id: payload.id as string },
+      select: { id: true, actif: true },
+    });
+
+    if (!utilisateur || !utilisateur.actif) {
+      set.status = 401;
+      return { erreur: "Session invalide" };
+    }
+
+    return { valid: true };
   });

@@ -53,8 +53,8 @@ const app = new Elysia()
       return { erreur: "Corps de requête invalide" };
     }
     console.error(`[${code}]`, error instanceof Error ? error.message : error);
-    set.status = 500;
-    return { erreur: "Erreur interne du serveur" };
+    if (set.status === 200) set.status = 500;
+    return { erreur: error instanceof Error ? error.message : "Erreur interne du serveur" };
   })
   .use(
     cors({

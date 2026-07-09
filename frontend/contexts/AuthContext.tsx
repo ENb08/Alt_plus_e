@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useRef, useCallback, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 
 type Utilisateur = {
@@ -27,11 +28,64 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
+const POLL_INTERVAL = 45000;
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [utilisateur, setUtilisateur] = useState<Utilisateur | null>(null);
   const [ecole, setEcole] = useState<Ecole | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const tokenRef = useRef(token);
+  const logoutRef = useRef<() => void>(undefined);
+
+  useEffect(() => { tokenRef.current = token; }, [token]);
+
+  const logout = useCallback(() => {
+    localStorage.removeItem("token");
+    setToken(null);
+    setUtilisateur(null);
+    setEcole(null);
+    router.push("/login");
+  }, [router]);
+
+  logoutRef.current = logout;
+
+  useEffect(() => {
+    const onUnauthorized = () => logoutRef.current?.();
+    window.addEventListener("auth:unauthorized", onUnauthorized);
+    return () => window.removeEventListener("auth:unauthorized", onUnauthorized);
+  }, []);
+
+  useEffect(() => {
+    if (!token) {
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+        pollingRef.current = null;
+      }
+      return;
+    }
+
+    const verify = async () => {
+      try {
+        await api("/api/auth/session/verify", { token: tokenRef.current ?? undefined });
+      } catch {
+        logoutRef.current?.();
+      }
+    };
+
+    verify();
+
+    pollingRef.current = setInterval(verify, POLL_INTERVAL);
+
+    return () => {
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+        pollingRef.current = null;
+      }
+    };
+  }, [token]);
 
   useEffect(() => {
     const saved = localStorage.getItem("token");
@@ -72,13 +126,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(data.token);
     setUtilisateur(data.utilisateur);
     setEcole(data.ecole);
-  };
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    setToken(null);
-    setUtilisateur(null);
-    setEcole(null);
   };
 
   return (

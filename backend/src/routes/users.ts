@@ -109,6 +109,7 @@ export const userRoutes = new Elysia({ prefix: "/api/users" })
       if (body.mot_de_passe !== undefined) {
         data.mot_de_passe = await hashPassword(body.mot_de_passe);
       }
+      if (body.actif !== undefined) data.actif = body.actif;
 
       const utilisateur = await prisma.uTILISATEUR.update({
         where: { id: params.id },
@@ -124,6 +125,7 @@ export const userRoutes = new Elysia({ prefix: "/api/users" })
         email: t.Optional(t.String({ format: "email" })),
         mot_de_passe: t.Optional(t.String({ minLength: 6 })),
         role: t.Optional(t.String()),
+        actif: t.Optional(t.Boolean()),
       }),
     }
   )
