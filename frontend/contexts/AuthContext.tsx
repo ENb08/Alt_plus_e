@@ -53,8 +53,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   function getEcoleSlug(): string {
     if (typeof window === "undefined") return "default";
-    const saved = localStorage.getItem("ecole_slug");
-    if (saved) return saved;
     const hostname = window.location.hostname;
     if (hostname === "localhost" || hostname === "127.0.0.1") return "default";
     if (hostname.includes("onrender.com") || hostname.includes("vercel.app")) return "default";
@@ -64,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const login = async (email: string, motDePasse: string, ecoleSlug?: string) => {
-    const slug = ecoleSlug || getEcoleSlug();
+    const slug = ecoleSlug ?? getEcoleSlug();
     const data = await api("/api/auth/login", {
       method: "POST",
       body: { email, mot_de_passe: motDePasse, ecole_slug: slug },

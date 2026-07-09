@@ -174,8 +174,8 @@ export default function LoginPage() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("email")) setEmail(params.get("email")!);
-    if (params.get("slug")) slugRef.current = params.get("slug");
     if (params.get("success") === "inscription") {
+      if (params.get("slug")) slugRef.current = params.get("slug");
       setSuccess("École créée ! Connectez-vous avec vos identifiants.");
     }
   }, []);
