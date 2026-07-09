@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-type MenuItem = { label: string; href: string; icon: any };
+type MenuItem = { label: string; href: string; icon: any; roles?: string[] };
 
 const menuGroups: { category: string; items: MenuItem[] }[] = [
   {
@@ -25,32 +25,33 @@ const menuGroups: { category: string; items: MenuItem[] }[] = [
   {
     category: "Académique",
     items: [
-      { label: "Élèves", href: "/eleves", icon: Users },
-      { label: "Enseignants", href: "/enseignants", icon: GraduationCap },
-      { label: "Classes", href: "/classes", icon: BookOpen },
-      { label: "Présences", href: "/presences", icon: ClipboardCheck },
-      { label: "Notes", href: "/notes", icon: FileText },
-      { label: "Bulletins", href: "/bulletins", icon: FileText },
+      { label: "Élèves", href: "/eleves", icon: Users, roles: ["ADMINISTRATEUR", "DIRECTEUR", "ENSEIGNANT", "COMPTABLE"] },
+      { label: "Enseignants", href: "/enseignants", icon: GraduationCap, roles: ["ADMINISTRATEUR", "DIRECTEUR"] },
+      { label: "Classes", href: "/classes", icon: BookOpen, roles: ["ADMINISTRATEUR", "DIRECTEUR", "ENSEIGNANT"] },
+      { label: "Présences", href: "/presences", icon: ClipboardCheck, roles: ["ADMINISTRATEUR", "DIRECTEUR", "ENSEIGNANT"] },
+      { label: "Notes", href: "/notes", icon: FileText, roles: ["ADMINISTRATEUR", "DIRECTEUR", "ENSEIGNANT"] },
+      { label: "Bulletins", href: "/bulletins", icon: FileText, roles: ["ADMINISTRATEUR", "DIRECTEUR", "ENSEIGNANT"] },
     ],
   },
   {
     category: "Finances",
     items: [
-      { label: "Paiements", href: "/paiements", icon: DollarSign },
-      { label: "Dépenses", href: "/depenses", icon: TrendingUp },
-      { label: "Comptabilité", href: "/comptabilite", icon: PiggyBank },
+      { label: "Paiements", href: "/paiements", icon: DollarSign, roles: ["ADMINISTRATEUR", "COMPTABLE"] },
+      { label: "Dépenses", href: "/depenses", icon: TrendingUp, roles: ["ADMINISTRATEUR", "COMPTABLE"] },
+      { label: "Comptabilité", href: "/comptabilite", icon: PiggyBank, roles: ["ADMINISTRATEUR", "COMPTABLE"] },
     ],
   },
   {
     category: "Rapports",
     items: [
-      { label: "Rapports", href: "/rapports", icon: BarChart3 },
+      { label: "Rapports", href: "/rapports", icon: BarChart3, roles: ["ADMINISTRATEUR", "DIRECTEUR", "COMPTABLE"] },
     ],
   },
   {
     category: "Paramètres",
     items: [
-      { label: "Paramètres", href: "/parametres", icon: Settings },
+      { label: "Utilisateurs", href: "/utilisateurs", icon: Users, roles: ["ADMINISTRATEUR", "CONCEPTEUR"] },
+      { label: "Paramètres", href: "/parametres", icon: Settings, roles: ["ADMINISTRATEUR"] },
     ],
   },
 ];
@@ -115,7 +116,12 @@ export default function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-        {menuGroups.map((group) => (
+        {menuGroups.map((group) => {
+          const visibleItems = group.items.filter(
+            (item) => !item.roles || item.roles.includes(utilisateur?.role ?? "")
+          );
+          if (visibleItems.length === 0) return null;
+          return (
           <div key={group.category} className="mb-3">
             <AnimatePresence>
               {!collapsed && (
@@ -130,7 +136,7 @@ export default function Sidebar() {
               )}
             </AnimatePresence>
             <div className="space-y-0.5">
-              {group.items.map((item) => {
+              {visibleItems.map((item) => {
                 const actif = pathname === item.href;
                 const Icon = item.icon;
                 return (
@@ -165,7 +171,8 @@ export default function Sidebar() {
               })}
             </div>
           </div>
-        ))}
+          );
+        })}
       </nav>
 
       {/* Bottom */}

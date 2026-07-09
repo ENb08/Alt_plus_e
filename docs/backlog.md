@@ -41,6 +41,7 @@
 | US-014 | Supprimer une classe | 🟡 J2 | 1h |
 | US-019 | Affecter un élève à une classe | 🟡 J2 | 2h |
 | S-008 | Désigner un enseignant titulaire pour une classe (endpoint + interface) | 🟡 J2 | 1h |
+| US-072 | Gestion des utilisateurs (CRUD — Admin peut créer/modifier/supprimer directeurs, enseignants, comptables) | 🟡 J2 | 3h |
 
 ---
 
@@ -120,16 +121,14 @@
 
 ---
 
-## J8 — Bibliothèque Numérique & Reconnaissance Faciale
+## J8 — Bibliothèque Numérique
 
-> **Loading states J8** : spinner upload fichier, skeleton liste ressources, spinner scan facial.
+> **Loading states J8** : spinner upload fichier, skeleton liste ressources.
 
 | ID | Libellé | Jour | Estimation |
 |----|---------|------|------------|
 | US-064 | Bibliothèque numérique — upload ressources (PDF, images, liens) | ⚫ J8 | 3h |
 | US-065 | Catégorisation, recherche et partage de ressources par classe | ⚫ J8 | 2h |
-| US-066 | Reconnaissance faciale — intégration caméra + identification élève | ⚫ J8 | 5h |
-| US-067 | Reconnaissance faciale — lien avec présence (marquer présent via visage) | ⚫ J8 | 3h |
 
 ---
 

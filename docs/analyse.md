@@ -36,7 +36,6 @@
 | Notifications SMS et email automatisées | ✅ **Service notifications** | — |
 | Paiement Mobile Money (Orange Money, M-Pesa, Wave) | ✅ **Moyens de paiement** | — |
 | Bibliothèque numérique (ressources pédagogiques) | ✅ **Gestion documentaire** | — |
-| Reconnaissance faciale (identification présence) | ✅ **Identification** | — |
 | Portail parent dédié (compte autonome) | ✅ **Interface parent** | — |
 | Signature électronique des bulletins | ✅ **Validation numérique** | — |
 | Sauvegardes & audit log | ❌ | v2 |
@@ -111,7 +110,6 @@ Création, modification, attribution des élèves, attribution des cours, désig
 
 ### Gestion des présences
 Saisie manuelle par l'enseignant (liste des élèves), historique, retards, absences.
-> **Reconnaissance faciale** (v2) : identification rapide par caméra, alternative au QR Code.
 
 ### Gestion des notes
 Encodage, modification, calcul des moyennes, classement.
@@ -594,7 +592,6 @@ Avant d'imprimer, l'utilisateur voit un **aperçu temps réel** de la carte :
 | Paiement Mobile Money | Spinner "Transaction en cours..." + confirmation |
 | Signature bulletin | Spinner "Signature..." + badge "Signé" |
 | Upload bibliothèque | Barre progression + % |
-| Scan facial | Spinner "Analyse visage..." + résultat |
 
 ---
 
