@@ -60,6 +60,7 @@ const app = new Elysia()
     cors({
       origin: [
         "http://localhost:3000",
+        "https://alt-plus-e.onrender.com",
         "https://alt-plus-ecole.onrender.com",
       ],
       methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],

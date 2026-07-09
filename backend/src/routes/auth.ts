@@ -24,22 +24,41 @@ export const authRoutes = new Elysia({ prefix: "/api/auth" })
       const { email, mot_de_passe, ecole_slug } = body;
 
       const host = headers["host"] || "";
-      const subdomain = ecole_slug ?? host.split(".")[0];
+      const requestedSlug = (ecole_slug || host.split(".")[0] || "")
+        .trim()
+        .toLowerCase();
 
-      const ecole = await prisma.eCOLE.findUnique({
-        where: { slug: subdomain },
-      });
+      let ecole = requestedSlug
+        ? await prisma.eCOLE.findUnique({ where: { slug: requestedSlug } })
+        : null;
+
+      if (!ecole && requestedSlug !== "default") {
+        ecole = await prisma.eCOLE.findUnique({ where: { slug: "default" } });
+      }
+
+      let utilisateur = ecole
+        ? await prisma.uTILISATEUR.findUnique({
+            where: {
+              email_ecole_id: { email, ecole_id: ecole.id },
+            },
+          })
+        : null;
+
+      if (!utilisateur) {
+        utilisateur = await prisma.uTILISATEUR.findFirst({
+          where: { email, actif: true },
+          include: { ecole: true },
+        });
+
+        if (utilisateur?.ecole) {
+          ecole = utilisateur.ecole;
+        }
+      }
 
       if (!ecole) {
         set.status = 401;
         return { erreur: "École non trouvée" };
       }
-
-      const utilisateur = await prisma.uTILISATEUR.findUnique({
-        where: {
-          email_ecole_id: { email, ecole_id: ecole.id },
-        },
-      });
 
       if (!utilisateur || !utilisateur.actif) {
         set.status = 401;
