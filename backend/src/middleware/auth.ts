@@ -1,4 +1,5 @@
 import { Elysia } from "elysia";
+import { prisma } from "../lib/prisma.ts";
 
 export type AuthPayload = {
   id: string;
@@ -28,6 +29,16 @@ export const authMiddleware = (app: Elysia) =>
     if (!payload || !payload.id) {
       set.status = 401;
       throw new Error("Token invalide");
+    }
+
+    const utilisateur = await prisma.uTILISATEUR.findUnique({
+      where: { id: payload.id as string },
+      select: { id: true, actif: true },
+    });
+
+    if (!utilisateur || !utilisateur.actif) {
+      set.status = 401;
+      throw new Error("Compte désactivé");
     }
 
     return {

@@ -51,6 +51,9 @@ export default function UtilisateursPage() {
 
   useEffect(() => { load(); }, []);
 
+  function lockScroll() { document.body.style.overflow = "hidden"; }
+  function unlockScroll() { document.body.style.overflow = ""; }
+
   function openCreate() {
     setEditId(null);
     setNom("");
@@ -59,6 +62,7 @@ export default function UtilisateursPage() {
     setRole("ENSEIGNANT");
     setErreur("");
     setShowForm(true);
+    lockScroll();
   }
 
   function openEdit(u: Utilisateur) {
@@ -69,6 +73,7 @@ export default function UtilisateursPage() {
     setRole(u.role as typeof ROLES[number]);
     setErreur("");
     setShowForm(true);
+    lockScroll();
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -88,6 +93,7 @@ export default function UtilisateursPage() {
         });
       }
       setShowForm(false);
+      unlockScroll();
       load();
     } catch (err) {
       setErreur(err instanceof Error ? err.message : "Erreur");
@@ -137,7 +143,7 @@ export default function UtilisateursPage() {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          onClick={() => setShowForm(false)}
+          onClick={() => { setShowForm(false); unlockScroll(); }}
         >
           <motion.div
             className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
@@ -149,7 +155,7 @@ export default function UtilisateursPage() {
               <h2 className="text-lg font-bold text-[#13233F]">
                 {editId ? "Modifier" : "Nouvel"} utilisateur
               </h2>
-              <button onClick={() => setShowForm(false)} className="text-gray-400 hover:text-gray-600">
+              <button onClick={() => { setShowForm(false); unlockScroll(); }} className="text-gray-400 hover:text-gray-600">
                 <X className="h-5 w-5" />
               </button>
             </div>
