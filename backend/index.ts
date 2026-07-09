@@ -4,6 +4,7 @@ import { cors } from "@elysiajs/cors";
 import { jwt } from "@elysiajs/jwt";
 import { authRoutes } from "./src/routes/auth.ts";
 import { userRoutes } from "./src/routes/users.ts";
+import { eleveRoutes } from "./src/routes/eleves.ts";
 import { prisma } from "./src/lib/prisma.ts";
 import { hashPassword } from "./src/lib/password.ts";
 
@@ -77,6 +78,7 @@ const app = new Elysia()
   )
   .use(authRoutes)
   .use(userRoutes)
+  .use(eleveRoutes)
   .get("/api/health", () => ({ status: "ok" }))
   .listen(3001);
 
