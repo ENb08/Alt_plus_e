@@ -83,7 +83,7 @@ export default function UtilisateursPage() {
       } else {
         await api("/api/users", {
           method: "POST",
-          body: { nom, email, mot_de_passe, role },
+          body: { nom, email, mot_de_passe: motDePasse, role },
           ...authHeaders(),
         });
       }
