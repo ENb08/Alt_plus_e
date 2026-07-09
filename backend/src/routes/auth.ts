@@ -81,6 +81,7 @@ export const authRoutes = new Elysia({ prefix: "/api/auth" })
         role: utilisateur.role,
         ecole_id: ecole.id,
         ecole_slug: ecole.slug,
+        version_session: utilisateur.version_session,
       });
 
       return {
@@ -172,6 +173,7 @@ export const authRoutes = new Elysia({ prefix: "/api/auth" })
         role: admin.role,
         ecole_id: ecole.id,
         ecole_slug: ecole.slug,
+        version_session: admin.version_session,
       });
 
       return {
@@ -225,6 +227,7 @@ export const authRoutes = new Elysia({ prefix: "/api/auth" })
         email: true,
         role: true,
         actif: true,
+        version_session: true,
         ecole_id: true,
         ecole: { select: { id: true, nom: true, slug: true } },
       },
@@ -233,6 +236,12 @@ export const authRoutes = new Elysia({ prefix: "/api/auth" })
     if (!utilisateur || !utilisateur.actif) {
       set.status = 401;
       return { erreur: "Compte désactivé ou introuvable" };
+    }
+
+    const version_session = payload.version_session as number | undefined;
+    if (version_session !== undefined && version_session !== utilisateur.version_session) {
+      set.status = 401;
+      return { erreur: "Session expirée" };
     }
 
     return { utilisateur };
@@ -253,12 +262,18 @@ export const authRoutes = new Elysia({ prefix: "/api/auth" })
 
     const utilisateur = await prisma.uTILISATEUR.findUnique({
       where: { id: payload.id as string },
-      select: { id: true, actif: true },
+      select: { id: true, actif: true, version_session: true },
     });
 
     if (!utilisateur || !utilisateur.actif) {
       set.status = 401;
       return { erreur: "Session invalide" };
+    }
+
+    const version_session = payload.version_session as number | undefined;
+    if (version_session !== undefined && version_session !== utilisateur.version_session) {
+      set.status = 401;
+      return { erreur: "Session expirée" };
     }
 
     return { valid: true };

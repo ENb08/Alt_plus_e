@@ -7,6 +7,7 @@ export type AuthPayload = {
   role: string;
   ecole_id: string;
   ecole_slug: string;
+  version_session: number;
 };
 
 declare module "elysia" {
@@ -33,12 +34,18 @@ export const authMiddleware = (app: Elysia) =>
 
     const utilisateur = await prisma.uTILISATEUR.findUnique({
       where: { id: payload.id as string },
-      select: { id: true, actif: true },
+      select: { id: true, actif: true, version_session: true },
     });
 
     if (!utilisateur || !utilisateur.actif) {
       set.status = 401;
       throw new Error("Compte désactivé");
+    }
+
+    const version_session = payload.version_session as number | undefined;
+    if (version_session !== undefined && version_session !== utilisateur.version_session) {
+      set.status = 401;
+      throw new Error("Session expirée");
     }
 
     return {
@@ -48,6 +55,7 @@ export const authMiddleware = (app: Elysia) =>
         role: payload.role as string,
         ecole_id: payload.ecole_id as string,
         ecole_slug: payload.ecole_slug as string,
+        version_session: utilisateur.version_session,
       },
     };
   });

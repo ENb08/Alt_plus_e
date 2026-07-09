@@ -63,8 +63,9 @@ model UTILISATEUR {
   mot_de_passe String
   role        Role
   date_creation DateTime @default(now())
-  actif       Boolean  @default(true)
-  ecole_id    String
+  actif          Boolean  @default(true)
+  version_session Int      @default(1)
+  ecole_id       String
   ecole       ECOLE    @relation(fields: [ecole_id], references: [id])
 
   eleve      ELEVE?

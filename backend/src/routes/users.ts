@@ -109,7 +109,10 @@ export const userRoutes = new Elysia({ prefix: "/api/users" })
       if (body.mot_de_passe !== undefined) {
         data.mot_de_passe = await hashPassword(body.mot_de_passe);
       }
-      if (body.actif !== undefined) data.actif = body.actif;
+      if (body.actif !== undefined) {
+        data.actif = body.actif;
+        data.version_session = { increment: 1 };
+      }
 
       const utilisateur = await prisma.uTILISATEUR.update({
         where: { id: params.id },
@@ -151,7 +154,7 @@ export const userRoutes = new Elysia({ prefix: "/api/users" })
 
     await prisma.uTILISATEUR.update({
       where: { id: params.id },
-      data: { actif: false },
+      data: { actif: false, version_session: { increment: 1 } },
     });
 
     return { message: "Utilisateur désactivé" };
