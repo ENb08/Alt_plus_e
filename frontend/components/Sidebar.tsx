@@ -28,6 +28,8 @@ const menuGroups: { category: string; items: MenuItem[] }[] = [
       { label: "Élèves", href: "/eleves", icon: Users, roles: ["ADMINISTRATEUR", "DIRECTEUR", "ENSEIGNANT", "COMPTABLE"] },
       { label: "Enseignants", href: "/enseignants", icon: GraduationCap, roles: ["ADMINISTRATEUR", "DIRECTEUR"] },
       { label: "Classes", href: "/classes", icon: BookOpen, roles: ["ADMINISTRATEUR", "DIRECTEUR", "ENSEIGNANT"] },
+      { label: "Cours", href: "/cours", icon: BookOpen, roles: ["ADMINISTRATEUR", "DIRECTEUR", "ENSEIGNANT"] },
+      { label: "Leçons", href: "/legons", icon: FileText, roles: ["ADMINISTRATEUR", "DIRECTEUR", "ENSEIGNANT"] },
       { label: "Présences", href: "/presences", icon: ClipboardCheck, roles: ["ADMINISTRATEUR", "DIRECTEUR", "ENSEIGNANT"] },
       { label: "Notes", href: "/notes", icon: FileText, roles: ["ADMINISTRATEUR", "DIRECTEUR", "ENSEIGNANT"] },
       { label: "Bulletins", href: "/bulletins", icon: FileText, roles: ["ADMINISTRATEUR", "DIRECTEUR", "ENSEIGNANT"] },

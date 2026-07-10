@@ -6,6 +6,9 @@ import { authRoutes } from "./src/routes/auth.ts";
 import { userRoutes } from "./src/routes/users.ts";
 import { eleveRoutes } from "./src/routes/eleves.ts";
 import { classeRoutes } from "./src/routes/classes.ts";
+import { enseignantRoutes } from "./src/routes/enseignants.ts";
+import { coursRoutes } from "./src/routes/cours.ts";
+import { leconRoutes } from "./src/routes/legons.ts";
 import { prisma } from "./src/lib/prisma.ts";
 import { hashPassword } from "./src/lib/password.ts";
 
@@ -81,6 +84,9 @@ const app = new Elysia()
   .use(userRoutes)
   .use(eleveRoutes)
   .use(classeRoutes)
+  .use(enseignantRoutes)
+  .use(coursRoutes)
+  .use(leconRoutes)
   .get("/api/health", () => ({ status: "ok" }))
   .listen(3001);
 
