@@ -21,7 +21,7 @@
 | US-004 | Interface adaptée au rôle (layout sidebar, routing, school context) | 🔴 J1 | 3h | ok
 | US-070 | Inscription d'une nouvelle école (backend : création école + admin + génération slug) | ok  🔴 J1 | 3h |
 | US-071 | Inscription d'une nouvelle école (frontend : page onboarding + formulaire création) | ok🔴 J1 | 3h |
-| S-004 | Middleware auth JWT + filtre ecole_id sur chaque requête | 🔴 J1 | 2h |ok 
+| S-004 | Middleware auth JWT + filtre ecole_id sur chaque requête | 🔴 J1 | 2h |ok
 
 ---
 
@@ -44,7 +44,6 @@
 | US-072 | Gestion des utilisateurs (CRUD — Admin peut créer/modifier/supprimer directeurs, enseignants, comptables) | 🟡 J2 | 3h |
 
 ---
-
 ## J3 — Enseignants & Cours
 
 | ID | Libellé | Jour | Estimation |
@@ -59,6 +58,7 @@
 | US-023 | Liste des enseignants | 🟢 J3 | 1h |
 | US-068 | Créer une fiche de leçon (titre, objectifs, matériel, déroulement, évaluation) | 🟢 J3 | 3h |
 | US-069 | Joindre des fichiers à une leçon + imprimer fiche | 🟢 J3 | 2h |
+
 
 ---
 
