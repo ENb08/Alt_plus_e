@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { UserPlus, Users, Search, Trash2, Edit3, X, AlertCircle, GraduationCap } from "lucide-react";
+import { UserPlus, Users, Search, Trash2, Edit3, X, AlertCircle, GraduationCap, Eye } from "lucide-react";
 import { api } from "@/lib/api";
 
 type Eleve = {
@@ -34,6 +35,7 @@ function authHeaders() {
 }
 
 export default function ElevesPage() {
+  const router = useRouter();
   const [eleves, setEleves] = useState<Eleve[]>([]);
   const [classes, setClasses] = useState<Classe[]>([]);
   const [loading, setLoading] = useState(true);
@@ -370,6 +372,13 @@ export default function ElevesPage() {
                   <td className="px-4 py-3 text-gray-400">{e.telephone_parent || "—"}</td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex items-center justify-end gap-1">
+                      <button
+                        onClick={() => router.push(`/eleves/${e.id}`)}
+                        className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-blue-500"
+                        title="Voir la fiche"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </button>
                       <button
                         onClick={() => openEdit(e)}
                         className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-[#FF6B1A]"
