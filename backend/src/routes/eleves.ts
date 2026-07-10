@@ -81,7 +81,7 @@ export const eleveRoutes = new Elysia({ prefix: "/api/eleves" })
         return { erreur: "Accès refusé" };
       }
 
-      const { nom, prenom, email, mot_de_passe, postnom, sexe, date_naissance, adresse, telephone_parent, classe_id, nationalite, allergies_medicales, ecole_provenance } = body;
+      const { nom, prenom, email, mot_de_passe, postnom, sexe, date_naissance, adresse, telephone_parent, classe_id, nationalite, allergies_medicales, ecole_provenance, photo_url } = body;
 
       const emailExists = await prisma.uTILISATEUR.findFirst({
         where: { email, ecole_id: user.ecole_id },
@@ -122,6 +122,7 @@ export const eleveRoutes = new Elysia({ prefix: "/api/eleves" })
               date_naissance: new Date(date_naissance),
               adresse: adresse || null,
               telephone_parent: telephone_parent || null,
+              photo_url: photo_url || null,
               nationalite: nationalite || null,
               allergies_medicales: allergies_medicales || null,
               ecole_provenance: ecole_provenance || null,
@@ -152,6 +153,7 @@ export const eleveRoutes = new Elysia({ prefix: "/api/eleves" })
         date_naissance: t.String({ format: "date" }),
         adresse: t.Optional(t.String()),
         telephone_parent: t.Optional(t.String()),
+        photo_url: t.Optional(t.String()),
         nationalite: t.Optional(t.String()),
         allergies_medicales: t.Optional(t.String()),
         ecole_provenance: t.Optional(t.String()),
@@ -199,6 +201,7 @@ export const eleveRoutes = new Elysia({ prefix: "/api/eleves" })
       if (body.date_naissance !== undefined) dataEleve.date_naissance = new Date(body.date_naissance);
       if (body.adresse !== undefined) dataEleve.adresse = body.adresse || null;
       if (body.telephone_parent !== undefined) dataEleve.telephone_parent = body.telephone_parent || null;
+      if (body.photo_url !== undefined) dataEleve.photo_url = body.photo_url || null;
       if (body.nationalite !== undefined) dataEleve.nationalite = body.nationalite || null;
       if (body.allergies_medicales !== undefined) dataEleve.allergies_medicales = body.allergies_medicales || null;
       if (body.ecole_provenance !== undefined) dataEleve.ecole_provenance = body.ecole_provenance || null;
@@ -242,6 +245,7 @@ export const eleveRoutes = new Elysia({ prefix: "/api/eleves" })
         date_naissance: t.Optional(t.String({ format: "date" })),
         adresse: t.Optional(t.String()),
         telephone_parent: t.Optional(t.String()),
+        photo_url: t.Optional(t.String()),
         nationalite: t.Optional(t.String()),
         allergies_medicales: t.Optional(t.String()),
         ecole_provenance: t.Optional(t.String()),

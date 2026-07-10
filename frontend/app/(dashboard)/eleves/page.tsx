@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { UserPlus, Users, Search, Trash2, Edit3, X, AlertCircle, GraduationCap, Eye } from "lucide-react";
+import { UserPlus, Users, Search, Trash2, Edit3, X, AlertCircle, GraduationCap, Eye, Camera, Upload } from "lucide-react";
 import { api } from "@/lib/api";
 
 type Eleve = {
@@ -51,6 +51,8 @@ export default function ElevesPage() {
   const [dateNaissance, setDateNaissance] = useState("");
   const [adresse, setAdresse] = useState("");
   const [telephoneParent, setTelephoneParent] = useState("");
+  const [photoUrl, setPhotoUrl] = useState("");
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [nationalite, setNationalite] = useState("");
   const [allergiesMedicales, setAllergiesMedicales] = useState("");
   const [ecoleProvenance, setEcoleProvenance] = useState("");
@@ -87,7 +89,7 @@ export default function ElevesPage() {
     setEditId(null);
     setNom(""); setPrenom(""); setEmail(""); setMotDePasse(""); setPostnom("");
     setSexe("M"); setDateNaissance(""); setAdresse("");
-    setTelephoneParent(""); setNationalite(""); setAllergiesMedicales("");
+    setTelephoneParent(""); setPhotoUrl(""); setPhotoFile(null); setNationalite(""); setAllergiesMedicales("");
     setEcoleProvenance(""); setClasseId(classes[0]?.id || "");
     setErreur("");
     setShowForm(true);
@@ -105,6 +107,8 @@ export default function ElevesPage() {
     setDateNaissance(e.date_naissance.split("T")[0]);
     setAdresse(e.adresse || "");
     setTelephoneParent(e.telephone_parent || "");
+    setPhotoUrl(e.photo_url || "");
+    setPhotoFile(null);
     setNationalite(e.nationalite || "");
     setAllergiesMedicales(e.allergies_medicales || "");
     setEcoleProvenance(e.ecole_provenance || "");
@@ -122,6 +126,7 @@ export default function ElevesPage() {
       const body: any = { nom, email, sexe, date_naissance: dateNaissance, classe_id: classeId };
       if (prenom) body.prenom = prenom;
       if (postnom) body.postnom = postnom;
+      if (photoUrl) body.photo_url = photoUrl;
       if (adresse) body.adresse = adresse;
       if (telephoneParent) body.telephone_parent = telephoneParent;
       if (nationalite) body.nationalite = nationalite;
@@ -228,6 +233,40 @@ export default function ElevesPage() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="flex items-start gap-4">
+                <div className="shrink-0">
+                  <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-xl bg-gray-100">
+                    {photoUrl ? (
+                      <img src={photoUrl} alt="Photo" className="h-full w-full object-cover" />
+                    ) : (
+                      <Camera className="h-8 w-8 text-gray-300" />
+                    )}
+                  </div>
+                </div>
+                <div className="flex-1 space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">Photo</label>
+                  <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-gray-200 px-3 py-2 text-sm text-gray-500 hover:border-[#FF6B1A] hover:text-[#FF6B1A]">
+                    <Upload className="h-4 w-4" />
+                    Choisir une photo
+                    <input type="file" accept="image/*" className="hidden" onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setPhotoFile(file);
+                        const reader = new FileReader();
+                        reader.onload = (ev) => setPhotoUrl(ev.target?.result as string);
+                        reader.readAsDataURL(file);
+                      }
+                    }} />
+                  </label>
+                  {photoUrl && (
+                    <button type="button" onClick={() => { setPhotoUrl(""); setPhotoFile(null); }}
+                      className="text-xs text-red-400 hover:text-red-500">
+                      Supprimer la photo
+                    </button>
+                  )}
+                </div>
+              </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="mb-1 block text-sm font-medium text-gray-700">Nom *</label>
