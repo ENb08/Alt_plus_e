@@ -44,6 +44,7 @@
 | US-072 | Gestion des utilisateurs (CRUD — Admin peut créer/modifier/supprimer directeurs, enseignants, comptables) | 🟡 J2 | 3h |
 
 ---
+
 ## J3 — Enseignants & Cours
 
 | ID | Libellé | Jour | Estimation |
@@ -58,7 +59,6 @@
 | US-023 | Liste des enseignants | 🟢 J3 | 1h |
 | US-068 | Créer une fiche de leçon (titre, objectifs, matériel, déroulement, évaluation) | 🟢 J3 | 3h |
 | US-069 | Joindre des fichiers à une leçon + imprimer fiche | 🟢 J3 | 2h |
-
 
 ---
 
