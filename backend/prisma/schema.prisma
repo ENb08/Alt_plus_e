@@ -59,6 +59,7 @@ model ECOLE {
 model UTILISATEUR {
   id          String   @id @default(uuid())
   nom         String
+  prenom      String?
   email       String
   mot_de_passe String
   role        Role
@@ -86,6 +87,9 @@ model ELEVE {
   adresse         String?
   telephone_parent String?
   photo_url       String?
+  nationalite     String?
+  allergies_medicales String?
+  ecole_provenance String?
   classe_id       String
   ecole_id        String
 

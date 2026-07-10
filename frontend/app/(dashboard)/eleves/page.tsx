@@ -13,7 +13,11 @@ type Eleve = {
   date_naissance: string;
   adresse: string | null;
   telephone_parent: string | null;
-  utilisateur: { id: string; nom: string; email: string; actif: boolean };
+  photo_url: string | null;
+  nationalite: string | null;
+  allergies_medicales: string | null;
+  ecole_provenance: string | null;
+  utilisateur: { id: string; nom: string; prenom: string | null; email: string; actif: boolean };
   classe: { id: string; nom_classe: string; section: string; niveau: string };
 };
 
@@ -37,6 +41,7 @@ export default function ElevesPage() {
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [nom, setNom] = useState("");
+  const [prenom, setPrenom] = useState("");
   const [email, setEmail] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
   const [postnom, setPostnom] = useState("");
@@ -44,6 +49,9 @@ export default function ElevesPage() {
   const [dateNaissance, setDateNaissance] = useState("");
   const [adresse, setAdresse] = useState("");
   const [telephoneParent, setTelephoneParent] = useState("");
+  const [nationalite, setNationalite] = useState("");
+  const [allergiesMedicales, setAllergiesMedicales] = useState("");
+  const [ecoleProvenance, setEcoleProvenance] = useState("");
   const [classeId, setClasseId] = useState("");
   const [erreur, setErreur] = useState("");
   const [saving, setSaving] = useState(false);
@@ -75,9 +83,10 @@ export default function ElevesPage() {
 
   function openCreate() {
     setEditId(null);
-    setNom(""); setEmail(""); setMotDePasse(""); setPostnom("");
+    setNom(""); setPrenom(""); setEmail(""); setMotDePasse(""); setPostnom("");
     setSexe("M"); setDateNaissance(""); setAdresse("");
-    setTelephoneParent(""); setClasseId(classes[0]?.id || "");
+    setTelephoneParent(""); setNationalite(""); setAllergiesMedicales("");
+    setEcoleProvenance(""); setClasseId(classes[0]?.id || "");
     setErreur("");
     setShowForm(true);
     lockScroll();
@@ -86,6 +95,7 @@ export default function ElevesPage() {
   function openEdit(e: Eleve) {
     setEditId(e.id);
     setNom(e.utilisateur.nom);
+    setPrenom(e.utilisateur.prenom || "");
     setEmail(e.utilisateur.email);
     setMotDePasse("");
     setPostnom(e.postnom || "");
@@ -93,6 +103,9 @@ export default function ElevesPage() {
     setDateNaissance(e.date_naissance.split("T")[0]);
     setAdresse(e.adresse || "");
     setTelephoneParent(e.telephone_parent || "");
+    setNationalite(e.nationalite || "");
+    setAllergiesMedicales(e.allergies_medicales || "");
+    setEcoleProvenance(e.ecole_provenance || "");
     setClasseId(e.classe.id);
     setErreur("");
     setShowForm(true);
@@ -105,9 +118,13 @@ export default function ElevesPage() {
     setErreur("");
     try {
       const body: any = { nom, email, sexe, date_naissance: dateNaissance, classe_id: classeId };
+      if (prenom) body.prenom = prenom;
       if (postnom) body.postnom = postnom;
       if (adresse) body.adresse = adresse;
       if (telephoneParent) body.telephone_parent = telephoneParent;
+      if (nationalite) body.nationalite = nationalite;
+      if (allergiesMedicales) body.allergies_medicales = allergiesMedicales;
+      if (ecoleProvenance) body.ecole_provenance = ecoleProvenance;
 
       if (editId) {
         if (motDePasse) body.mot_de_passe = motDePasse;
@@ -216,8 +233,21 @@ export default function ElevesPage() {
                     className="h-10 w-full rounded-xl border border-gray-200 px-3 text-sm focus:border-[#FF6B1A] focus:outline-none focus:ring-4 focus:ring-[#FF6B1A]/10" />
                 </div>
                 <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">Prénom</label>
+                  <input type="text" value={prenom} onChange={(e) => setPrenom(e.target.value)}
+                    className="h-10 w-full rounded-xl border border-gray-200 px-3 text-sm focus:border-[#FF6B1A] focus:outline-none focus:ring-4 focus:ring-[#FF6B1A]/10" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
                   <label className="mb-1 block text-sm font-medium text-gray-700">Postnom</label>
                   <input type="text" value={postnom} onChange={(e) => setPostnom(e.target.value)}
+                    className="h-10 w-full rounded-xl border border-gray-200 px-3 text-sm focus:border-[#FF6B1A] focus:outline-none focus:ring-4 focus:ring-[#FF6B1A]/10" />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">Nationalité</label>
+                  <input type="text" value={nationalite} onChange={(e) => setNationalite(e.target.value)}
                     className="h-10 w-full rounded-xl border border-gray-200 px-3 text-sm focus:border-[#FF6B1A] focus:outline-none focus:ring-4 focus:ring-[#FF6B1A]/10" />
                 </div>
               </div>
@@ -269,10 +299,23 @@ export default function ElevesPage() {
                   className="h-10 w-full rounded-xl border border-gray-200 px-3 text-sm focus:border-[#FF6B1A] focus:outline-none focus:ring-4 focus:ring-[#FF6B1A]/10" />
               </div>
 
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">Téléphone parent</label>
+                  <input type="text" value={telephoneParent} onChange={(e) => setTelephoneParent(e.target.value)}
+                    className="h-10 w-full rounded-xl border border-gray-200 px-3 text-sm focus:border-[#FF6B1A] focus:outline-none focus:ring-4 focus:ring-[#FF6B1A]/10" />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">École provenance</label>
+                  <input type="text" value={ecoleProvenance} onChange={(e) => setEcoleProvenance(e.target.value)}
+                    className="h-10 w-full rounded-xl border border-gray-200 px-3 text-sm focus:border-[#FF6B1A] focus:outline-none focus:ring-4 focus:ring-[#FF6B1A]/10" />
+                </div>
+              </div>
+
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">Téléphone parent</label>
-                <input type="text" value={telephoneParent} onChange={(e) => setTelephoneParent(e.target.value)}
-                  className="h-10 w-full rounded-xl border border-gray-200 px-3 text-sm focus:border-[#FF6B1A] focus:outline-none focus:ring-4 focus:ring-[#FF6B1A]/10" />
+                <label className="mb-1 block text-sm font-medium text-gray-700">Allergies médicales</label>
+                <textarea value={allergiesMedicales} onChange={(e) => setAllergiesMedicales(e.target.value)}
+                  className="h-20 w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:border-[#FF6B1A] focus:outline-none focus:ring-4 focus:ring-[#FF6B1A]/10" />
               </div>
 
               <motion.button
@@ -318,6 +361,7 @@ export default function ElevesPage() {
                   </td>
                   <td className="px-4 py-3 font-medium">
                     {e.utilisateur.nom}
+                    {e.utilisateur.prenom && <span className="text-gray-400"> {e.utilisateur.prenom}</span>}
                     {e.postnom && <span className="text-gray-400"> {e.postnom}</span>}
                   </td>
                   <td className="px-4 py-3 text-gray-500">{e.utilisateur.email}</td>
